@@ -48,10 +48,10 @@ function git_theme_updater_config_page() {
 		$gitUriSecretValue = get_option($gitUriSecret);
 		$gitUriTokenValue = get_option($gitUriToken);
 		
-		if ($gitUriValue =="" || !$gitUriValue) {
-			$t = wp_get_theme($name);
+		$t = wp_get_theme($name);
+		
+		if ($gitUriValue =="" || !$gitUriValue)
 			$gitUriValue = $t->get('Github Theme URI');
-		}
 		
 		?><h3><?php echo $t; ?></h3>
 		<form action="admin.php">
