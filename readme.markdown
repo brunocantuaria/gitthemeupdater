@@ -26,7 +26,6 @@ Example header:
 
     Theme Name: Example  
     Theme URI: http://example.com/  
-    Github Theme URI: https://github.com/username/repo
     Description: My Example Theme
     Author: person
     Version: 1.0
