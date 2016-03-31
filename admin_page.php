@@ -29,8 +29,10 @@ function git_theme_updater_config_page() {
 	<div id="icon-themes" class="icon32"><br></div><h2><?php _e("Settings for Git Theme Updater","gitThemeUpdater"); ?></h2>
 	<?php
 	
-	if ($_GET['save']) {
-		if ($_GET['theme'])
+	if ($_POST['save'] || $_GET['save']) {
+		if ($_POST['theme'])
+			git_theme_updater_save_options($_POST['theme']);
+		elseif ($_GET['theme'])
 			git_theme_updater_save_options($_GET['theme']);
 	}
 	
@@ -54,8 +56,7 @@ function git_theme_updater_config_page() {
 			$gitUriValue = $t->get('Github Theme URI');
 		
 		?><h3><?php echo $t; ?></h3>
-		<form action="admin.php">
-		<input type="hidden" name="page" value="git_theme_updater_config_page" />
+		<form method="POST" action="admin.php?page=git_theme_updater_config_page">
 		<input type="hidden" name="save" value="data" />
 		<input type="hidden" name="theme" value="<?php echo $name; ?>" />
 		<table class="form-table">
@@ -108,16 +109,16 @@ function git_theme_updater_config_page() {
 
 function git_theme_updater_save_options($name) {
 
-	if ($_GET['save'] == "data") {
+	if ($_POST['save'] == "data") {
 	
 		$gitUri = "GTU_gituri_". $name;
-		update_option($gitUri,$_GET[$gitUri]);
+		update_option($gitUri,$_POST[$gitUri]);
 		
 		$gitUriID = "GTU_gituri_id_". $name;
-		update_option($gitUriID,$_GET[$gitUriID]);
+		update_option($gitUriID,$_POST[$gitUriID]);
 		
 		$gitUriSecret = "GTU_gituri_secret_". $name;
-		update_option($gitUriSecret,$_GET[$gitUriSecret]);
+		update_option($gitUriSecret,$_POST[$gitUriSecret]);
 		
 		?>
 		<div id="setting-error-settings_updated" class="updated settings-error"> 
