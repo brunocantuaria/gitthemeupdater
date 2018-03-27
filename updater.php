@@ -93,7 +93,7 @@ function transient_update_themes_filter($data){
 		}
 		
 		// Sort and get latest tag
-		$tags = array_map(create_function('$t', 'return $t->name;'), $response);
+		$tags = array_map(function($t){ return $t->name; }, $response);
 		usort($tags, "version_compare");
 		
 		
