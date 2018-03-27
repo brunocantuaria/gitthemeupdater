@@ -139,9 +139,9 @@ function git_theme_updater_save_options($name) {
 	
 		if ($_GET['code']) {
 			$url = "https://github.com/login/oauth/access_token?client_id=". get_option("GTU_gituri_id_".$name) ."&client_secret=". get_option("GTU_gituri_secret_".$name) ."&code=". $_GET['code'];
-			$token = parse_str(file_get_contents($url));
-			if ($access_token) {
-				update_option("GTU_gituri_token_". $name,$access_token);
+			$token = parse_str(file_get_contents($url), $data);
+			if ($data['access_token']) {
+				update_option("GTU_gituri_token_". $name,$data['access_token']);
 				?>
 				<div id="setting-error-settings_updated" class="updated settings-error"> 
 					<p><strong><?php _e("Token saved!","gitThemeUpdater"); ?></strong></p>
