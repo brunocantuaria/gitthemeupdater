@@ -5,7 +5,7 @@ else
 	add_action( 'admin_menu', 'git_theme_updater_add_menu' );
 	
 function git_theme_updater_add_menu() {
-	add_menu_page('Git Theme Updater Config Page', 'ThemeUpdater', 8, 'git_theme_updater_config_page', 'git_theme_updater_config_page'); 
+	add_menu_page('Git Theme Updater Config Page', 'ThemeUpdater', 'administrator', 'git_theme_updater_config_page', 'git_theme_updater_config_page'); 
 }
 
 function git_theme_updater_config_page() {
@@ -29,11 +29,8 @@ function git_theme_updater_config_page() {
 	<div id="icon-themes" class="icon32"><br></div><h2><?php _e("Settings for Git Theme Updater","gitThemeUpdater"); ?></h2>
 	<?php
 	
-	if ($_POST['save'] || $_GET['save']) {
-		if ($_POST['theme'])
-			git_theme_updater_save_options($_POST['theme']);
-		elseif ($_GET['theme'])
-			git_theme_updater_save_options($_GET['theme']);
+	if (isset($_REQUEST['save'])) {
+		git_theme_updater_save_options($_REQUEST['theme']);
 	}
 	
 	$themes = wp_get_themes();
