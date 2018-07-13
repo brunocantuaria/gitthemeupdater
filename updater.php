@@ -5,7 +5,7 @@ Plugin URI: https://github.com/brunocantuaria/gitthemeupdater/
 Description: A theme updater for developers who use GitHub. Based on plugin Theme Updater from Douglas Beck (https://github.com/UCF/Theme-Updater). This version includes support to private projects and an interface to link themes to GitHub projects.
 Author: Bruno Cantuária
 Author URI: http://cantuaria.net.br
-Version: 1.0.2
+Version: 1.0.3
 */
 
 require_once('assets.php');
@@ -150,17 +150,14 @@ function upgrader_source_selection_filter($source, $remote_source=NULL, $upgrade
 		return $source;
 	}
 	
-	if ($upgrader->skin->theme_info)
-		$name = $upgrader->skin->theme_info->get_template();
-	else
-		$name = $upgrader->skin->theme;
+	$name = $upgrader->skin->theme_info->get_stylesheet();
 		
 	$gitUriValue = get_option("GTU_gituri_". $name);
 	if ($gitUriValue =="" || !$gitUriValue) {
 		$t = wp_get_theme($name);
 		$gitUriValue = $t->get('Github Theme URI');
 	}
-
+	
 	if ($gitUriValue =="" || !$gitUriValue) {
 		_e("Github Theme URI: Theme isn't on Github. Skipping.","gitThemeUpdater"); echo '<BR />';
 		return $source;	

@@ -75,7 +75,7 @@ function github_theme_update_row( $theme_key, $theme, $echo = true ) {
 if (! is_multisite() ) {
 	add_filter('theme_action_links','git_theme_upgrader_add_rollback',10,3);
 	function git_theme_upgrader_add_rollback($actions, $theme) {
-		$actions[] = github_theme_update_row($theme->get_template(),$theme,false);
+		$actions[] = github_theme_update_row($theme->get_stylesheet(),$theme,false);
 		return $actions;
 	}
 }
