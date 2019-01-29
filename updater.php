@@ -29,6 +29,9 @@ function transient_update_themes_filter($data){
 	
 	$installed_themes = wp_get_themes();
 	foreach ( (array) $installed_themes as $name => $_theme ) {
+		
+		//Normalize Name
+		$name = str_replace( array('.', ' ', ','), '_', $name );
 				
 		$gitUriValue = get_option("GTU_gituri_". $name);
 		if ($gitUriValue =="" || !$gitUriValue) {
