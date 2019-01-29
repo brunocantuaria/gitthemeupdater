@@ -37,6 +37,9 @@ function git_theme_updater_config_page() {
 	
 	foreach ($themes as $name => $theme) {
 		
+		//Normalize Name
+		$name = str_replace( array('.', ' ', ','), '_', $name );
+		
 		$gitUri = "GTU_gituri_". $name;
 		$gitUriID = "GTU_gituri_id_". $name;
 		$gitUriSecret = "GTU_gituri_secret_". $name;
