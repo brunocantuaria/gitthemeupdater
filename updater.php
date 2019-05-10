@@ -3,9 +3,9 @@
 Plugin Name: Git Theme Updater
 Plugin URI: https://github.com/brunocantuaria/gitthemeupdater/
 Description: A theme updater for developers who use GitHub. Based on plugin Theme Updater from Douglas Beck (https://github.com/UCF/Theme-Updater). This version includes support to private projects and an interface to link themes to GitHub projects.
-Author: Bruno Cantuária
+Author: Bruno Cantuaria
 Author URI: http://cantuaria.net.br
-Version: 1.0.4
+Version: 1.0.5
 */
 
 require_once('assets.php');
