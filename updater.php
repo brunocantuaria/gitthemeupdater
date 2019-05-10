@@ -11,14 +11,33 @@ Version: 1.0.4
 require_once('assets.php');
 include_once('admin_page.php');
 
+global $gitThemeUpdaterError;
+$gitThemeUpdaterError = false;
+
 add_action( 'extra_theme_headers', 'github_extra_theme_headers' );
 function github_extra_theme_headers( $headers ) {
     $headers['Github Theme URI'] = 'Github Theme URI';
     return $headers;
 }
 
+function github_error_message() {
+	global $gitThemeUpdaterError;
+
+	if ($gitThemeUpdaterError === false)
+		return;
+
+    ?>
+    <div class="notice notice-error is-dismissible">
+        <p><?php echo $gitThemeUpdaterError; ?></p>
+    </div>
+    <?php
+}
+add_action( 'admin_notices', 'github_error_message' );
+
 add_filter('site_transient_update_themes', 'transient_update_themes_filter');
 function transient_update_themes_filter($data){
+
+	global $gitThemeUpdaterError;
 
 	//Themes may block updates
 	$update = true;
@@ -29,6 +48,8 @@ function transient_update_themes_filter($data){
 	
 	$installed_themes = wp_get_themes();
 	foreach ( (array) $installed_themes as $name => $_theme ) {
+
+		$name = str_replace( array('.', ' ', ','), '_', $name );
 				
 		$gitUriValue = get_option("GTU_gituri_". $name);
 		if ($gitUriValue =="" || !$gitUriValue) {
@@ -52,15 +73,21 @@ function transient_update_themes_filter($data){
 		add_action( "after_theme_row_" . $theme['Stylesheet'], 'github_theme_update_row', 11, 2 );
 		
 		// Grab Github Tags
-		preg_match(
-			'/http(s)?:\/\/github.com\/(?<username>[\w-]+)\/(?<repo>[\w-]+)$/',
-			$gitUriValue,
-			$matches);
-		if(!isset($matches['username']) or !isset($matches['repo'])){
-			$data->response[$theme_key]['error'] = 'Incorrect github project url.  Format should be (no trailing slash): <code style="background:#FFFBE4;">https://github.com/&lt;username&gt;/&lt;repo&gt;</code>';
+		$urlfix = str_replace( array('https://', 'http://', 'www.github.com/', 'github.com/'), '', $gitUriValue );
+		$urldata = explode('/', $urlfix);
+
+		if (count($urldata) < 2) {
+			$gitThemeUpdaterError = 'Incorrect github project url.  Format should be (no trailing slash): <code style="background:#FFFBE4;">https://github.com/&lt;username&gt;/&lt;repo&gt;</code>';
 			continue;
 		}
+
+		$matches = array(
+			'username' => $urldata[0],
+			'repo' => $urldata[1],
+		);
 		
+		//Maybe stop using tag?
+		//https://raw.githubusercontent.com/username/repo/master/style.css?token=token
 		$url = sprintf('https://api.github.com/repos/%s/%s/tags', urlencode($matches['username']), urlencode($matches['repo']));
 		
 		//If have token
@@ -72,7 +99,7 @@ function transient_update_themes_filter($data){
 		if(empty($response)){
 			$raw_response = wp_remote_get($url, array('sslverify' => false, 'timeout' => 10));
 			if ( is_wp_error( $raw_response ) ){
-				$data->response[$theme_key]['error'] = "Error response from " . $url;
+				$gitThemeUpdaterError = "Error response from " . $url;
 				continue;
 			}
 			$response = json_decode($raw_response['body']);
@@ -86,12 +113,12 @@ function transient_update_themes_filter($data){
 				} else {
 					$errors = print_r($response->message, true);
 				}
-				$data->response[$theme_key]['error'] = sprintf('While <a href="%s">fetching tags</a> api error</a>: <span class="error">%s</span>', $url, $errors);
+				$gitThemeUpdaterError = sprintf('While <a href="%s">fetching tags</a> api error</a>: <span class="error">%s</span>', $url, $errors);
 				continue;
 			}
 			
 			if(count($response) == 0){
-				$data->response[$theme_key]['error'] = "Github theme does not have any tags";
+				$gitThemeUpdaterError = "Github theme does not have any tags";
 				continue;
 			}
 			
@@ -134,7 +161,7 @@ function transient_update_themes_filter($data){
 		$data->response[$theme_key] = $update;
 		
 	}
-	
+
 	return $data;
 }
 
