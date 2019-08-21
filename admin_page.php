@@ -79,7 +79,7 @@ function git_theme_updater_config_page() {
 				<?php if ($gitUriSecretValue && $gitUriIDValue) {
 					if ($gitUriTokenValue) {
 						?><tr valign="top">
-						<td colspan="2"><strong><?php _e("Authorized!","gitThemeUpdater"); ?></strong> <a href="admin.php?page=git_theme_updater_config_page&save=forgottoken&theme=<?php echo $name; ?>"><?php _e("Click here to forgot authorization.","gitThemeUpdater"); ?></a></td>
+						<td colspan="2"><strong><?php _e("Authorized!","gitThemeUpdater"); ?></strong> <a href="admin.php?page=git_theme_updater_config_page&save=forgottoken&theme=<?php echo $name; ?>"><?php _e("Click here to forget authorization.","gitThemeUpdater"); ?></a></td>
 						</tr>
 						<?php
 					} else {
